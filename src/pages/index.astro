@@ -1,0 +1,143 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const poems = (await getCollection("poems")).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+);
+const tags = [...new Set(poems.flatMap((poem) => poem.data.tags))].sort();
+---
+
+<Layout>
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">A personal anthology</p>
+      <h1 id="page-title">Words worth<br />returning to.</h1>
+      <p class="intro-copy">
+        Poems and fragments that stayed. Collected slowly, read often.
+      </p>
+    </section>
+
+    <section class="collection" aria-labelledby="collection-title">
+      <div class="collection-heading">
+        <div>
+          <p class="eyebrow">The collection</p>
+          <h2 id="collection-title">Browse the archive</h2>
+        </div>
+
+        <label class="search-field">
+          <span class="search-mark" aria-hidden="true">⌕</span>
+          <span class="sr-only">Search poems</span>
+          <input
+            id="poem-search"
+            type="search"
+            placeholder="Title, author, a remembered line…"
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div class="tag-row" aria-label="Filter by tag">
+        <button class="tag active" type="button" data-tag="" aria-pressed="true">All</button>
+        {tags.map((tag) => (
+          <button class="tag" type="button" data-tag={tag} aria-pressed="false">{tag}</button>
+        ))}
+      </div>
+
+      <div class="archive-topline">
+        <p class="result-count" aria-live="polite">
+          <span id="result-total">{poems.length}</span>
+          <span id="result-label">{poems.length === 1 ? " piece" : " pieces"}</span>
+        </p>
+        <p class="archive-note">An evolving index</p>
+      </div>
+
+      <ol class="poem-list" id="poem-list">
+        {poems.map((poem, index) => (
+          <li
+            class="poem-row"
+            data-search={`${poem.data.title} ${poem.data.author} ${poem.data.tags.join(" ")} ${poem.body}`.toLowerCase()}
+            data-tags={poem.data.tags.join("|")}
+          >
+            <a href={`/poems/${poem.id}`}>
+              <span class="poem-number">{String(index + 1).padStart(2, "0")}</span>
+              <span class="poem-title">{poem.data.title}</span>
+              <span class="poem-meta">
+                {poem.data.author}{poem.data.year && <small>{poem.data.year}</small>}
+              </span>
+              <span class="row-tags" aria-label={`Tags: ${poem.data.tags.join(", ")}`}>
+                {poem.data.tags.slice(0, 2).map((tag) => <span>#{tag}</span>)}
+              </span>
+              <span class="poem-arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <div class="empty-state" id="empty-state" hidden>
+        <p>No pieces match this search.</p>
+        <button type="button" id="clear-filters">Clear filters</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const input = document.querySelector<HTMLInputElement>("#poem-search");
+    const rows = Array.from(document.querySelectorAll<HTMLElement>(".poem-row"));
+    const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-tag]"));
+    const total = document.querySelector<HTMLElement>("#result-total");
+    const label = document.querySelector<HTMLElement>("#result-label");
+    const emptyState = document.querySelector<HTMLElement>("#empty-state");
+    const clearButton = document.querySelector<HTMLButtonElement>("#clear-filters");
+    let activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+
+    function applyFilters() {
+      const query = input?.value.trim().toLocaleLowerCase() ?? "";
+      let visible = 0;
+
+      rows.forEach((row) => {
+        const matchesQuery = !query || (row.dataset.search ?? "").includes(query);
+        const tags = (row.dataset.tags ?? "").split("|");
+        const matchesTag = !activeTag || tags.includes(activeTag);
+        row.hidden = !(matchesQuery && matchesTag);
+        if (!row.hidden) visible += 1;
+      });
+
+      tagButtons.forEach((button) => {
+        const isActive = button.dataset.tag === activeTag;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+
+      if (total) total.textContent = String(visible);
+      if (label) label.textContent = visible === 1 ? " piece" : " pieces";
+      if (emptyState) emptyState.hidden = visible !== 0;
+    }
+
+    function updateUrl() {
+      const url = new URL(window.location.href);
+      if (activeTag) url.searchParams.set("tag", activeTag);
+      else url.searchParams.delete("tag");
+      window.history.replaceState({}, "", url);
+    }
+
+    tagButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeTag = button.dataset.tag ?? "";
+        updateUrl();
+        applyFilters();
+      });
+    });
+
+    input?.addEventListener("input", applyFilters);
+    clearButton?.addEventListener("click", () => {
+      activeTag = "";
+      if (input) input.value = "";
+      updateUrl();
+      applyFilters();
+      input?.focus();
+    });
+
+    applyFilters();
+  </script>
+</Layout>

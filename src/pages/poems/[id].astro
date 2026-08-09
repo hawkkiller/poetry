@@ -1,0 +1,63 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const poems = await getCollection("poems");
+  return poems.map((poem) => ({ params: { id: poem.id }, props: { poem } }));
+}
+
+interface Props {
+  poem: CollectionEntry<"poems">;
+}
+
+const { poem } = Astro.props;
+const { Content } = await render(poem);
+---
+
+<Layout
+  title={poem.data.title}
+  description={`${poem.data.title}, by ${poem.data.author}. Collected in Commonplace.`}
+>
+  <main class="poem-page" id="top">
+    <a class="back-link" href="/">← The collection</a>
+
+    <article class="poem-article">
+      <header class="poem-header">
+        <p class="eyebrow">A kept piece</p>
+        <h1>{poem.data.title}</h1>
+        <p class="byline">
+          {poem.data.author}
+          {poem.data.year && <span> · {poem.data.year}</span>}
+        </p>
+      </header>
+
+      <div class="poem-content">
+        <Content />
+      </div>
+
+      {poem.data.comment && (
+        <aside class="personal-note">
+          <p class="note-label">Why I kept this</p>
+          <p>{poem.data.comment}</p>
+        </aside>
+      )}
+
+      <footer class="poem-footer">
+        <div class="reader-tags" aria-label="Tags">
+          {poem.data.tags.map((tag) => <a href={`/?tag=${encodeURIComponent(tag)}`}>#{tag}</a>)}
+        </div>
+        {poem.data.source && (
+          <a class="source-link" href={poem.data.source} target="_blank" rel="noreferrer">
+            Original source <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </footer>
+    </article>
+
+    <nav class="end-nav" aria-label="Return to collection">
+      <p>Keep reading</p>
+      <a href="/">Browse all pieces <span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+</Layout>

@@ -1,0 +1,30 @@
+---
+title: "Echo"
+author: "Christina Rossetti"
+year: 1862
+tags: [memory, longing, dreams]
+source: "https://www.poetryfoundation.org/poems/44915/echo-56d22467249a6"
+comment: "The last two lines turn memory from something passive into a place we choose to remain."
+order: 3
+---
+
+Come to me in the silence of the night;
+   Come in the speaking silence of a dream;
+Come with soft rounded cheeks and eyes as bright
+   As sunlight on a stream;
+      Come back in tears,
+O memory, hope, love of finished years.
+
+O dream how sweet, too sweet, too bitter sweet,
+   Whose wakening should have been in Paradise,
+Where souls brimfull of love abide and meet;
+   Where thirsting longing eyes
+      Watch the slow door
+That opening, letting in, lets out no more.
+
+Yet come to me in dreams, that I may live
+   My very life again though cold in death:
+Come back to me in dreams, that I may give
+   Pulse for pulse, breath for breath:
+      Speak low, lean low,
+As long ago, my love, how long ago.
