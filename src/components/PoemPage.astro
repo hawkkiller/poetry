@@ -1,0 +1,92 @@
+---
+import { Image } from "astro:assets";
+import { getEntry, render, type CollectionEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { tagLabel, ui, type Language } from "../i18n";
+
+interface Props {
+  poem: CollectionEntry<"poems">;
+  language: Language;
+}
+
+const { poem, language } = Astro.props;
+const copy = ui[language];
+const { Content } = await render(poem);
+const authorProfile = await getEntry("authors", poem.id.split("/")[0]);
+const otherPrefix = language === "en" ? "/poems" : "/en/poems";
+const alternateHref = `${otherPrefix}/${poem.id}`;
+---
+
+<Layout
+  title={poem.data.title}
+  description={`${poem.data.title}, ${poem.data.author}. ${language === "ru" ? "Выбрано Михаилом Лазебным." : "Selected by Michael Lazebny."}`}
+  language={language}
+  alternateHref={alternateHref}
+>
+  <main class="poem-page" id="top">
+    <a class="back-link" href={copy.home}>{copy.collection}</a>
+
+    <article class="poem-article">
+      {poem.data.image && (
+        <figure class="poem-visual">
+          <Image
+            class="poem-visual-image"
+            src={poem.data.image}
+            alt={poem.data.imageAlt ?? ""}
+            widths={[640, 960, 1440, 2048]}
+            sizes="(max-width: 900px) 100vw, 640px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+      )}
+
+      <header class="poem-header">
+        <h1>{poem.data.title}</h1>
+        <div class="author-byline">
+          {authorProfile?.data.photo && (
+            <Image
+              class="author-photo"
+              src={authorProfile.data.photo}
+              alt={authorProfile.data.photoAlt ?? authorProfile.data.name}
+              widths={[48, 96]}
+              sizes="48px"
+              loading="lazy"
+            />
+          )}
+          <p class="byline">
+            {poem.data.author}
+            {poem.data.year && <span> · {poem.data.year}</span>}
+          </p>
+        </div>
+      </header>
+
+      <div class="poem-content">
+        <Content />
+      </div>
+
+      {poem.data.comment && (
+        <aside class="personal-note">
+          <p class="note-label">{copy.why}</p>
+          <p>{poem.data.comment}</p>
+        </aside>
+      )}
+
+      <footer class="poem-footer">
+        <div class="reader-tags" aria-label={copy.tags}>
+          {poem.data.tags.map((tag) => <a href={`${copy.home}?tag=${encodeURIComponent(tag)}`}>#{tagLabel(language, tag)}</a>)}
+        </div>
+        {poem.data.source && (
+          <a class="source-link" href={poem.data.source} target="_blank" rel="noreferrer">
+            {copy.source} <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </footer>
+    </article>
+
+    <nav class="end-nav" aria-label={copy.returnLabel}>
+      <p>{copy.keepReading}</p>
+      <a href={copy.home}>{copy.browse} <span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+</Layout>

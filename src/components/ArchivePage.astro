@@ -1,0 +1,196 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import heroImage from "../assets/poetry-hero.webp";
+import Layout from "../layouts/Layout.astro";
+import { languageName, pieceLabel, tagLabel, ui, type Language } from "../i18n";
+
+interface Props {
+  language: Language;
+}
+
+const { language } = Astro.props;
+const copy = ui[language];
+const poems = (await getCollection("poems")).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+);
+const tags = [...new Set(poems.flatMap((poem) => poem.data.tags))].sort((a, b) =>
+  tagLabel(language, a).localeCompare(tagLabel(language, b)),
+);
+const poemPrefix = language === "ru" ? "/poems" : "/en/poems";
+---
+
+<Layout
+  language={language}
+  alternateHref={copy.alternateHome}
+  description={copy.description}
+>
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title" class="sr-only">{copy.title[0]} {copy.title[1]}</h1>
+      <Image
+        class="intro-image"
+        src={heroImage}
+        alt=""
+        widths={[640, 960, 1400, 2048]}
+        sizes="(max-width: 900px) 100vw, 70vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </section>
+
+    <section class="collection" aria-labelledby="collection-title">
+      <div class="collection-heading">
+        <h2 id="collection-title">{copy.archive}</h2>
+
+        <label class="search-field">
+          <span class="search-mark" aria-hidden="true">⌕</span>
+          <span class="sr-only">{copy.searchLabel}</span>
+          <input
+            id="poem-search"
+            type="search"
+            placeholder={copy.searchPlaceholder}
+            autocomplete="off"
+          />
+        </label>
+      </div>
+
+      <div class="filters">
+        <label class="language-filter">
+          <span>{copy.originalLanguage}</span>
+          <select id="language-filter">
+            <option value="">{copy.anyLanguage}</option>
+            <option value="en">{languageName(language, "en")}</option>
+            <option value="ru">{languageName(language, "ru")}</option>
+          </select>
+        </label>
+
+        <div class="tag-row" aria-label={copy.tags}>
+          <button class="tag active" type="button" data-tag="" aria-pressed="true">{copy.all}</button>
+          {tags.map((tag) => (
+            <button class="tag" type="button" data-tag={tag} aria-pressed="false">{tagLabel(language, tag)}</button>
+          ))}
+        </div>
+      </div>
+
+      <div class="archive-topline">
+        <p class="result-count" aria-live="polite">
+          <span id="result-total">{poems.length}</span>{" "}
+          <span id="result-label">{pieceLabel(language, poems.length)}</span>
+        </p>
+      </div>
+
+      <ol class="poem-list" id="poem-list">
+        {poems.map((poem, index) => (
+          <li
+            class="poem-row"
+            data-search={`${poem.data.title} ${poem.data.author} ${poem.data.tags.map((tag) => tagLabel(language, tag)).join(" ")} ${poem.body}`.toLocaleLowerCase()}
+            data-tags={poem.data.tags.join("|")}
+            data-original-language={poem.data.originalLanguage}
+          >
+            <a href={`${poemPrefix}/${poem.id}`}>
+              <span class="poem-number">{String(index + 1).padStart(2, "0")}</span>
+              <span class="poem-title">{poem.data.title}</span>
+              <span class="poem-meta">
+                {poem.data.author}{poem.data.year && <small>{poem.data.year}</small>}
+              </span>
+              <span class="row-tags" aria-label={`${copy.tags}: ${poem.data.tags.join(", ")}`}>
+                {poem.data.tags.slice(0, 2).map((tag) => <span>#{tagLabel(language, tag)}</span>)}
+              </span>
+              <span class="poem-arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <div class="empty-state" id="empty-state" hidden>
+        <p>{copy.noResults}</p>
+        <button type="button" id="clear-filters">{copy.clear}</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const input = document.querySelector<HTMLInputElement>("#poem-search");
+    const languageSelect = document.querySelector<HTMLSelectElement>("#language-filter");
+    const rows = Array.from(document.querySelectorAll<HTMLElement>(".poem-row"));
+    const tagButtons = Array.from(document.querySelectorAll<HTMLButtonElement>("[data-tag]"));
+    const total = document.querySelector<HTMLElement>("#result-total");
+    const label = document.querySelector<HTMLElement>("#result-label");
+    const emptyState = document.querySelector<HTMLElement>("#empty-state");
+    const clearButton = document.querySelector<HTMLButtonElement>("#clear-filters");
+    let activeTag = new URLSearchParams(window.location.search).get("tag") ?? "";
+    let activeLanguage = new URLSearchParams(window.location.search).get("lang") ?? "";
+
+    if (languageSelect) languageSelect.value = activeLanguage;
+
+    function resultWord(count: number) {
+      if (document.documentElement.lang === "en") return count === 1 ? "piece" : "pieces";
+      const lastTwo = count % 100;
+      const last = count % 10;
+      if (lastTwo >= 11 && lastTwo <= 14) return "произведений";
+      if (last === 1) return "произведение";
+      if (last >= 2 && last <= 4) return "произведения";
+      return "произведений";
+    }
+
+    function applyFilters() {
+      const query = input?.value.trim().toLocaleLowerCase() ?? "";
+      let visible = 0;
+
+      rows.forEach((row) => {
+        const matchesQuery = !query || (row.dataset.search ?? "").includes(query);
+        const tags = (row.dataset.tags ?? "").split("|");
+        const matchesTag = !activeTag || tags.includes(activeTag);
+        const matchesLanguage = !activeLanguage || row.dataset.originalLanguage === activeLanguage;
+        row.hidden = !(matchesQuery && matchesTag && matchesLanguage);
+        if (!row.hidden) visible += 1;
+      });
+
+      tagButtons.forEach((button) => {
+        const isActive = button.dataset.tag === activeTag;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+
+      if (total) total.textContent = String(visible);
+      if (label) label.textContent = resultWord(visible);
+      if (emptyState) emptyState.hidden = visible !== 0;
+    }
+
+    function updateUrl() {
+      const url = new URL(window.location.href);
+      if (activeTag) url.searchParams.set("tag", activeTag);
+      else url.searchParams.delete("tag");
+      if (activeLanguage) url.searchParams.set("lang", activeLanguage);
+      else url.searchParams.delete("lang");
+      window.history.replaceState({}, "", url);
+    }
+
+    tagButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeTag = button.dataset.tag ?? "";
+        updateUrl();
+        applyFilters();
+      });
+    });
+
+    input?.addEventListener("input", applyFilters);
+    languageSelect?.addEventListener("change", () => {
+      activeLanguage = languageSelect.value;
+      updateUrl();
+      applyFilters();
+    });
+    clearButton?.addEventListener("click", () => {
+      activeTag = "";
+      activeLanguage = "";
+      if (input) input.value = "";
+      if (languageSelect) languageSelect.value = "";
+      updateUrl();
+      applyFilters();
+      input?.focus();
+    });
+
+    applyFilters();
+  </script>
+</Layout>

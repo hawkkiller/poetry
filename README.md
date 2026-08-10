@@ -1,17 +1,25 @@
-# Commonplace
+# Michael Lazebny’s favorite poems
 
 A quiet, Markdown-first archive for poems and pieces worth returning to.
 
+Russian is the default interface at `/`. The English interface uses `/en`.
+
 ## Add a poem
 
-Create a Markdown file in `src/content/poems/`. The filename becomes the URL.
+Create one Markdown file for the original poem at
+`src/content/poems/<author-slug>/<poem-slug>.md`. That structure produces a URL
+such as `/poems/brodsky/odinochestvo`.
 
 ```md
 ---
+originalLanguage: en
+translationKey: poem-title
 title: "Poem title"
 author: "Author name"
 year: 1924
 tags: [memory, night]
+image: "../../../assets/poems/author-slug/poem-title.webp"
+imageAlt: "A concise description of the image"
 source: "https://example.com/original-source"
 comment: "An optional personal note about why this stayed with me."
 favorite: false
@@ -22,8 +30,34 @@ The poem goes here.
 Keep its original line breaks.
 ```
 
-`title` and `author` are required. Everything else is optional. The build will
-report a clear error if frontmatter does not match the collection schema.
+`originalLanguage`, `translationKey`, `title`, and `author` are required. The
+build will report a clear error if frontmatter does not match the collection
+schema.
+
+`originalLanguage` is `en` or `ru`. `translationKey` is a stable content identifier;
+the author folder and Markdown filename define the URL.
+Store the title, author, and poem exactly as they appear in the original language.
+Do not add translated copies: EN/RU changes only the website interface. Use stable
+tag keys from `src/i18n.ts`; the interface localizes their visible labels.
+
+`image` and `imageAlt` are optional. Keep poem images separately in
+`src/assets/poems/<author-slug>/`; the page displays them at their natural aspect
+ratio without cropping.
+
+## Add an author photo
+
+Each author has a profile at `src/content/authors/<author-slug>.md`. Add an image
+under `src/assets/authors/`, then reference it from the profile:
+
+```md
+---
+name: "Author name"
+photo: "../../assets/authors/author-slug.webp"
+photoAlt: "Portrait of Author name"
+---
+```
+
+The photo is optional and appears beside the author's name on poem pages.
 
 Use plain Markdown unless a piece genuinely needs embedded components. This
 keeps the collection readable outside the website and easy to move elsewhere.

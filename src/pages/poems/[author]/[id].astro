@@ -1,0 +1,23 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import PoemPage from "../../../components/PoemPage.astro";
+
+export async function getStaticPaths() {
+  const poems = await getCollection("poems");
+  return poems.map((poem) => {
+    const [author, id] = poem.id.split("/");
+    return {
+      params: { author, id },
+      props: { poem },
+    };
+  });
+}
+
+interface Props {
+  poem: CollectionEntry<"poems">;
+}
+
+const { poem } = Astro.props;
+---
+
+<PoemPage poem={poem} language="ru" />
