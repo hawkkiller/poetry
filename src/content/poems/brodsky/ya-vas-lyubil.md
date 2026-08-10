@@ -4,6 +4,8 @@ translationKey: ya-vas-lyubil
 title: "Я вас любил"
 author: "Иосиф Бродский"
 tags: [love, longing, darkness]
+image: "../../../assets/poems/brodsky/ya-vas-lyubil.webp"
+imageAlt: "Разрушающийся мраморный бюст у моря, обращённый к едва заметному женскому силуэту"
 order: 5
 ---
 
