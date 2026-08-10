@@ -52,6 +52,7 @@ under `src/assets/authors/`, then reference it from the profile:
 ```md
 ---
 name: "Author name"
+sortName: "Surname"
 lifespan: "1900–1980"
 facts:
   - "A concise, verified fact about the author."

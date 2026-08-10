@@ -21,7 +21,10 @@ const authorsWithCounts = authors
     author,
     count: poems.filter((poem) => poem.id.split("/")[0] === author.id).length,
   }))
-  .sort((a, b) => collator.compare(a.author.data.name, b.author.data.name));
+  .sort((a, b) => collator.compare(
+    a.author.data.sortName ?? a.author.data.name,
+    b.author.data.sortName ?? b.author.data.name,
+  ));
 ---
 
 <Layout

@@ -23,6 +23,6 @@
 - Use a stable `translationKey` as the poem identifier even though translations are not stored.
 - Tags in frontmatter are stable language-neutral keys; translate their visible labels through `src/i18n.ts`.
 - A poem may optionally define `image` and `imageAlt` for its visual identity. Store images separately under `src/assets/poems/<author-slug>/` and never crop them in the poem layout.
-- Keep one author profile at `src/content/authors/<author-slug>.md`. Its Markdown body may contain a short biography; frontmatter may define `lifespan`, `facts`, `photo`, and `photoAlt`. Store portrait assets under `src/assets/authors/`.
+- Keep one author profile at `src/content/authors/<author-slug>.md`. Its Markdown body may contain a short biography; frontmatter may define `sortName`, `lifespan`, `facts`, `photo`, and `photoAlt`. Use `sortName` for surname-first alphabetical ordering. Store portrait assets under `src/assets/authors/`.
 - Author profiles are listed at `/authors` and `/en/authors`; an individual profile lives at `/authors/<author-slug>` and `/en/authors/<author-slug>`.
 - Personal comments may use the language chosen by the site owner and must remain clearly separate from the poem text.

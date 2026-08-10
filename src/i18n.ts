@@ -71,6 +71,9 @@ const tagLabels: Record<string, Record<Language, string>> = {
   solitude: { en: "solitude", ru: "одиночество" },
   eternity: { en: "eternity", ru: "вечность" },
   given: { en: "the given", ru: "данность" },
+  art: { en: "art", ru: "искусство" },
+  defiance: { en: "defiance", ru: "вызов" },
+  city: { en: "city", ru: "город" },
 };
 
 export function tagLabel(language: Language, tag: string) {
