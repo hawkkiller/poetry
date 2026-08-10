@@ -31,7 +31,7 @@ export const ui = {
     home: "/",
     alternateHome: "/en",
     languageLabel: "Язык",
-    headerTitle: "Михаил Лазебный · любимые стихи",
+    headerTitle: "Michael Lazebny · favorite poems",
     title: ["Любимые стихи", "Михаила Лазебного."],
     archive: "Архив",
     authors: "Авторы",
