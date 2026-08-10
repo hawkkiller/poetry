@@ -514,8 +514,53 @@ input:focus-visible {
   text-transform: uppercase;
 }
 
+.author-bio {
+  max-width: 38rem;
+  margin: 0 0 48px;
+}
+
+.author-bio h2,
+.author-facts h3 {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.author-bio-copy {
+  margin-top: 14px;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.65;
+}
+
+.author-bio-copy p {
+  margin: 0;
+}
+
+.author-facts {
+  margin-top: 28px;
+}
+
+.author-facts ul {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+  padding-left: 1.15rem;
+  color: #4e504a;
+  font-family: var(--serif);
+  line-height: 1.55;
+}
+
+.author-facts li {
+  padding-left: 4px;
+}
+
 .author-poem-list {
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 /* Poem pages */

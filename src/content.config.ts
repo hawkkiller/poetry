@@ -24,6 +24,8 @@ const authors = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/authors" }),
   schema: ({ image }) => z.object({
     name: z.string().min(1),
+    lifespan: z.string().optional(),
+    facts: z.array(z.string()).default([]),
     photo: image().optional(),
     photoAlt: z.string().optional(),
   }),

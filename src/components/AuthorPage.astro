@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import { pieceLabel, tagLabel, ui, type Language } from "../i18n";
 
@@ -11,6 +11,7 @@ interface Props {
 
 const { author, language } = Astro.props;
 const copy = ui[language];
+const { Content } = await render(author);
 const poems = (await getCollection("poems"))
   .filter((poem) => poem.id.split("/")[0] === author.id)
   .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
@@ -41,9 +42,28 @@ const alternateHref = `${language === "ru" ? "/en/authors" : "/authors"}/${autho
       )}
       <div>
         <h1>{author.data.name}</h1>
-        <p>{poems.length} {pieceLabel(language, poems.length)}</p>
+        <p>
+          {author.data.lifespan && <span>{author.data.lifespan} · </span>}
+          {poems.length} {pieceLabel(language, poems.length)}
+        </p>
       </div>
     </header>
+
+    <section class="author-bio" aria-labelledby="biography-title">
+      <h2 id="biography-title">{copy.biography}</h2>
+      <div class="author-bio-copy">
+        <Content />
+      </div>
+
+      {author.data.facts.length > 0 && (
+        <div class="author-facts">
+          <h3>{copy.notableFacts}</h3>
+          <ul>
+            {author.data.facts.map((fact) => <li>{fact}</li>)}
+          </ul>
+        </div>
+      )}
+    </section>
 
     <ol class="poem-list author-poem-list">
       {poems.map((poem, index) => (

@@ -4,6 +4,8 @@ translationKey: zhiraf
 title: "Жираф"
 author: "Николай Гумилёв"
 tags: [nature, longing, dreams]
+image: "../../../assets/poems/gumilev/zhiraf.webp"
+imageAlt: "Грустный человек сидит у озера, глядя на жирафа среди пальм и тропических растений"
 order: 7
 ---
 

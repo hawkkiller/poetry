@@ -52,12 +52,18 @@ under `src/assets/authors/`, then reference it from the profile:
 ```md
 ---
 name: "Author name"
+lifespan: "1900–1980"
+facts:
+  - "A concise, verified fact about the author."
 photo: "../../assets/authors/author-slug.webp"
 photoAlt: "Portrait of Author name"
 ---
+
+A short biographical paragraph in Markdown.
 ```
 
-The photo is optional and appears beside the author's name on poem pages.
+The biography, lifespan, facts, and photo are optional. Keep facts concise and
+verify them against reliable literary or biographical sources.
 
 Use plain Markdown unless a piece genuinely needs embedded components. This
 keeps the collection readable outside the website and easy to move elsewhere.
