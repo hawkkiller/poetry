@@ -1,0 +1,64 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { pieceLabel, ui, type Language } from "../i18n";
+
+interface Props {
+  language: Language;
+}
+
+const { language } = Astro.props;
+const copy = ui[language];
+const [authors, poems] = await Promise.all([
+  getCollection("authors"),
+  getCollection("poems"),
+]);
+const collator = new Intl.Collator(language === "ru" ? "ru" : "en");
+const authorPrefix = language === "ru" ? "/authors" : "/en/authors";
+const authorsWithCounts = authors
+  .map((author) => ({
+    author,
+    count: poems.filter((poem) => poem.id.split("/")[0] === author.id).length,
+  }))
+  .sort((a, b) => collator.compare(a.author.data.name, b.author.data.name));
+---
+
+<Layout
+  title={copy.authors}
+  language={language}
+  alternateHref={language === "ru" ? "/en/authors" : "/authors"}
+>
+  <main class="authors-page" id="top">
+    <a class="back-link" href={copy.home}>{copy.collection}</a>
+
+    <header class="directory-heading">
+      <h1>{copy.authors}</h1>
+    </header>
+
+    <ol class="author-list">
+      {authorsWithCounts.map(({ author, count }) => (
+        <li class="author-row">
+          <a href={`${authorPrefix}/${author.id}`}>
+            <span class="author-list-photo" aria-hidden="true">
+              {author.data.photo ? (
+                <Image
+                  src={author.data.photo}
+                  alt=""
+                  widths={[52, 104]}
+                  sizes="52px"
+                  loading="lazy"
+                />
+              ) : (
+                <span>{author.data.name.charAt(0)}</span>
+              )}
+            </span>
+            <span class="author-list-name">{author.data.name}</span>
+            <span class="author-count">{count} {pieceLabel(language, count)}</span>
+            <span class="author-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Layout>

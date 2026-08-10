@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import { pieceLabel, tagLabel, ui, type Language } from "../i18n";
+
+interface Props {
+  author: CollectionEntry<"authors">;
+  language: Language;
+}
+
+const { author, language } = Astro.props;
+const copy = ui[language];
+const poems = (await getCollection("poems"))
+  .filter((poem) => poem.id.split("/")[0] === author.id)
+  .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
+const poemPrefix = language === "ru" ? "/poems" : "/en/poems";
+const authorsHref = language === "ru" ? "/authors" : "/en/authors";
+const alternateHref = `${language === "ru" ? "/en/authors" : "/authors"}/${author.id}`;
+---
+
+<Layout
+  title={author.data.name}
+  description={`${author.data.name}: ${poems.length} ${pieceLabel(language, poems.length)}.`}
+  language={language}
+  alternateHref={alternateHref}
+>
+  <main class="author-page" id="top">
+    <a class="back-link" href={authorsHref}>← {copy.authors}</a>
+
+    <header class="author-profile-header">
+      {author.data.photo && (
+        <Image
+          class="author-profile-photo"
+          src={author.data.photo}
+          alt={author.data.photoAlt ?? author.data.name}
+          widths={[96, 192]}
+          sizes="96px"
+          loading="eager"
+        />
+      )}
+      <div>
+        <h1>{author.data.name}</h1>
+        <p>{poems.length} {pieceLabel(language, poems.length)}</p>
+      </div>
+    </header>
+
+    <ol class="poem-list author-poem-list">
+      {poems.map((poem, index) => (
+        <li class="poem-row">
+          <a href={`${poemPrefix}/${poem.id}`}>
+            <span class="poem-number">{String(index + 1).padStart(2, "0")}</span>
+            <span class="poem-title">{poem.data.title}</span>
+            <span class="poem-meta">
+              {poem.data.tags.slice(0, 2).map((tag) => `#${tagLabel(language, tag)}`).join(" · ")}
+            </span>
+            <span class="poem-arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </main>
+</Layout>

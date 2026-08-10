@@ -12,7 +12,9 @@ interface Props {
 const { poem, language } = Astro.props;
 const copy = ui[language];
 const { Content } = await render(poem);
-const authorProfile = await getEntry("authors", poem.id.split("/")[0]);
+const authorId = poem.id.split("/")[0];
+const authorProfile = await getEntry("authors", authorId);
+const authorHref = `${language === "ru" ? "/authors" : "/en/authors"}/${authorId}`;
 const otherPrefix = language === "en" ? "/poems" : "/en/poems";
 const alternateHref = `${otherPrefix}/${poem.id}`;
 ---
@@ -43,7 +45,7 @@ const alternateHref = `${otherPrefix}/${poem.id}`;
 
       <header class="poem-header">
         <h1>{poem.data.title}</h1>
-        <div class="author-byline">
+        <a class="author-byline" href={authorHref}>
           {authorProfile?.data.photo && (
             <Image
               class="author-photo"
@@ -58,7 +60,7 @@ const alternateHref = `${otherPrefix}/${poem.id}`;
             {poem.data.author}
             {poem.data.year && <span> · {poem.data.year}</span>}
           </p>
-        </div>
+        </a>
       </header>
 
       <div class="poem-content">

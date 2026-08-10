@@ -46,6 +46,10 @@ const russianHref = language === "ru" ? Astro.url.pathname : alternateHref;
       <slot />
 
       <footer class="site-footer">
+        <nav class="footer-nav" aria-label={language === "ru" ? "Разделы сайта" : "Site sections"}>
+          <a href={copy.home}>{copy.poems}</a>
+          <a href={language === "ru" ? "/authors" : "/en/authors"}>{copy.authors}</a>
+        </nav>
         <a href="#top">{copy.backTop}</a>
       </footer>
     </div>

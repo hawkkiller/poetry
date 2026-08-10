@@ -41,7 +41,12 @@ const poemPrefix = language === "ru" ? "/poems" : "/en/poems";
 
     <section class="collection" aria-labelledby="collection-title">
       <div class="collection-heading">
-        <h2 id="collection-title">{copy.archive}</h2>
+        <div class="collection-title-row">
+          <h2 id="collection-title">{copy.archive}</h2>
+          <a class="authors-index-link" href={language === "ru" ? "/authors" : "/en/authors"}>
+            {copy.authors} <span aria-hidden="true">→</span>
+          </a>
+        </div>
 
         <label class="search-field">
           <span class="search-mark" aria-hidden="true">⌕</span>

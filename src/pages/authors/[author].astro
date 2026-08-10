@@ -1,0 +1,20 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import AuthorPage from "../../components/AuthorPage.astro";
+
+export async function getStaticPaths() {
+  const authors = await getCollection("authors");
+  return authors.map((author) => ({
+    params: { author: author.id },
+    props: { author },
+  }));
+}
+
+interface Props {
+  author: CollectionEntry<"authors">;
+}
+
+const { author } = Astro.props;
+---
+
+<AuthorPage author={author} language="ru" />
