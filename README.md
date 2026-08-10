@@ -69,3 +69,17 @@ npm install
 npm run dev
 npm run build
 ```
+
+## Deploy to Cloudflare
+
+Pushes to `main` run `.github/workflows/deploy-cloudflare.yml`, build the Astro
+site, and deploy `dist` as Cloudflare Workers Static Assets. The Worker name is
+`michael-lazebny-poetry`.
+
+Add these GitHub Actions repository secrets before the first deployment:
+
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_API_TOKEN`
+
+The token should use Cloudflare's **Edit Cloudflare Workers** template and be
+restricted to the account that will host the site. Never commit either value.

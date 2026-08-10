@@ -13,9 +13,7 @@
 # astro
 /.astro/
 
-# local build state from site previews
-/.next/
-/.vinext/
+# cloudflare
 /.wrangler/
 
 # misc
