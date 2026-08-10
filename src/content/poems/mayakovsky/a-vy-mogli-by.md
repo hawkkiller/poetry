@@ -5,6 +5,8 @@ title: "А ВЫ МОГЛИ БЫ?"
 author: "Владимир Маяковский"
 year: 1913
 tags: [art, defiance, city]
+image: "../../../assets/poems/mayakovsky/a-vy-mogli-by.avif"
+imageAlt: "Поэт играет на водосточных трубах над индустриальным городом, а из труб летят красные губы"
 order: 8
 ---
 

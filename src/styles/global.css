@@ -816,6 +816,10 @@ input:focus-visible {
     width: calc(100% + 32px);
     margin-left: -16px;
   }
+
+  .poem-visual-image {
+    border-radius: 0;
+  }
 }
 
 @media (max-width: 540px) {
