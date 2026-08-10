@@ -24,6 +24,8 @@ const alternateHref = `${otherPrefix}/${poem.id}`;
   description={`${poem.data.title} by ${poem.data.author}, selected for Michael Lazebny's favorite poems.`}
   language={language}
   alternateHref={alternateHref}
+  socialImage={poem.data.image}
+  socialImageAlt={poem.data.imageAlt}
 >
   <main class="poem-page" id="top">
     <a class="back-link" href={copy.home}>{copy.collection}</a>

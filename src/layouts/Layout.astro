@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import { getImage } from "astro:assets";
 import heroImage from "../assets/poetry-hero.webp";
 import { ui, type Language } from "../i18n";
 
@@ -8,6 +10,8 @@ interface Props {
   description?: string;
   language?: Language;
   alternateHref?: string;
+  socialImage?: ImageMetadata;
+  socialImageAlt?: string;
 }
 
 const language: Language = Astro.props.language ?? "ru";
@@ -20,8 +24,15 @@ const copy = ui[language];
 const englishHref = language === "en" ? Astro.url.pathname : alternateHref;
 const russianHref = language === "ru" ? Astro.url.pathname : alternateHref;
 const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
-const socialImageUrl = Astro.site ? new URL(heroImage.src, Astro.site).href : heroImage.src;
-const socialImageAlt = "An illustrated poetic landscape with poppies, skulls, the sea, and a setting sun";
+const socialImageSource = Astro.props.socialImage ?? heroImage;
+const socialImage = await getImage({
+  src: socialImageSource,
+  width: Math.min(1200, socialImageSource.width),
+  format: "webp",
+});
+const socialImageUrl = Astro.site ? new URL(socialImage.src, Astro.site).href : socialImage.src;
+const socialImageAlt = Astro.props.socialImageAlt
+  ?? "An illustrated poetic landscape with poppies, skulls, the sea, and a setting sun";
 ---
 
 <!doctype html>
@@ -40,8 +51,8 @@ const socialImageAlt = "An illustrated poetic landscape with poppies, skulls, th
     {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
     <meta property="og:image" content={socialImageUrl} />
     <meta property="og:image:type" content="image/webp" />
-    <meta property="og:image:width" content={String(heroImage.width)} />
-    <meta property="og:image:height" content={String(heroImage.height)} />
+    <meta property="og:image:width" content={String(socialImage.attributes.width)} />
+    <meta property="og:image:height" content={String(socialImage.attributes.height)} />
     <meta property="og:image:alt" content={socialImageAlt} />
     <meta property="og:locale" content={language === "ru" ? "ru_RU" : "en_US"} />
     <meta name="twitter:card" content="summary_large_image" />
