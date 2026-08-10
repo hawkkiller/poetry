@@ -3,6 +3,7 @@ originalLanguage: ru
 translationKey: odinochestvo
 title: "Одиночество"
 author: "Иосиф Бродский"
+year: 1959
 tags: [solitude, eternity, given]
 image: "../../../assets/poems/brodsky/odinochestvo.webp"
 imageAlt: "Лестница, уходящая в пустоту над холмами и дорогами"

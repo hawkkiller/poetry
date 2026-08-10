@@ -3,6 +3,7 @@ originalLanguage: ru
 translationKey: ne-vyhodi-iz-komnaty
 title: "Не выходи из комнаты, не совершай ошибку..."
 author: "Иосиф Бродский"
+year: 1970
 tags: [solitude, darkness]
 image: "../../../assets/poems/brodsky/ne-vyhodi-iz-komnaty.webp"
 imageAlt: "Человек стоит спиной в комнате с закрытым шкафом, столом, стульями и выходом в пустой коридор"
