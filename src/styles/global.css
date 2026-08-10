@@ -795,7 +795,6 @@ input:focus-visible {
     min-height: 112px;
   }
 
-  .poem-meta,
   .row-tags {
     display: none;
   }
