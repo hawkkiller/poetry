@@ -21,7 +21,7 @@ const alternateHref = `${language === "ru" ? "/en/authors" : "/authors"}/${autho
 
 <Layout
   title={author.data.name}
-  description={`${author.data.name}: ${poems.length} ${pieceLabel(language, poems.length)}.`}
+  description={`${author.data.name}: ${poems.length} selected ${poems.length === 1 ? "poem" : "poems"} in Michael Lazebny's favorite poems.`}
   language={language}
   alternateHref={alternateHref}
 >

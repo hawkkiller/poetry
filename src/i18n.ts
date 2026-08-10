@@ -25,7 +25,7 @@ export const ui = {
     browse: "Browse all pieces",
     backTop: "Back to top ↑",
     returnLabel: "Return to collection",
-    description: "A quiet archive of poems and pieces worth returning to.",
+    description: "A personal collection of poems worth returning to, curated by Michael Lazebny.",
   },
   ru: {
     home: "/",
@@ -51,7 +51,7 @@ export const ui = {
     browse: "Все произведения",
     backTop: "Наверх ↑",
     returnLabel: "Вернуться к архиву",
-    description: "Личный архив стихов и текстов, к которым хочется возвращаться.",
+    description: "A personal collection of poems worth returning to, curated by Michael Lazebny.",
   },
 } as const;
 

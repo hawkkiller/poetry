@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import heroImage from "../assets/poetry-hero.webp";
 import { ui, type Language } from "../i18n";
 
 interface Props {
@@ -10,9 +11,7 @@ interface Props {
 }
 
 const language: Language = Astro.props.language ?? "ru";
-const siteTitle = language === "ru"
-  ? "Любимые стихи Михаила Лазебного"
-  : "Michael Lazebny’s favorite poems";
+const siteTitle = "Michael Lazebny's favorite poems";
 const title = Astro.props.title ?? siteTitle;
 const description = Astro.props.description ?? ui[language].description;
 const alternateHref = Astro.props.alternateHref ?? (language === "en" ? "/" : "/en");
@@ -20,6 +19,9 @@ const pageTitle = title === siteTitle ? title : `${title} — ${siteTitle}`;
 const copy = ui[language];
 const englishHref = language === "en" ? Astro.url.pathname : alternateHref;
 const russianHref = language === "ru" ? Astro.url.pathname : alternateHref;
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const socialImageUrl = Astro.site ? new URL(heroImage.src, Astro.site).href : heroImage.src;
+const socialImageAlt = "An illustrated poetic landscape with poppies, skulls, the sea, and a setting sun";
 ---
 
 <!doctype html>
@@ -30,6 +32,23 @@ const russianHref = language === "ru" ? Astro.url.pathname : alternateHref;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f3efe6" />
     <meta name="generator" content={Astro.generator} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content={String(heroImage.width)} />
+    <meta property="og:image:height" content={String(heroImage.height)} />
+    <meta property="og:image:alt" content={socialImageAlt} />
+    <meta property="og:locale" content={language === "ru" ? "ru_RU" : "en_US"} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <title>{pageTitle}</title>
   </head>
   <body>

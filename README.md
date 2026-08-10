@@ -1,4 +1,4 @@
-# Michael Lazebny’s favorite poems
+# Michael Lazebny's favorite poems
 
 A quiet, Markdown-first archive for poems and pieces worth returning to.
 
@@ -80,6 +80,10 @@ Add these GitHub Actions repository secrets before the first deployment:
 
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_API_TOKEN`
+
+The public production URL is configured as `https://poetry.lazebny.io` in
+`astro.config.mjs`. Astro uses it to generate absolute canonical and
+social-sharing URLs, including the `poetry-hero` Open Graph image.
 
 The token should use Cloudflare's **Edit Cloudflare Workers** template and be
 restricted to the account that will host the site. Never commit either value.
