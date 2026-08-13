@@ -74,6 +74,8 @@ const tagLabels: Record<string, Record<Language, string>> = {
   art: { en: "art", ru: "искусство" },
   defiance: { en: "defiance", ru: "вызов" },
   city: { en: "city", ru: "город" },
+  war: { en: "war", ru: "война" },
+  death: { en: "death", ru: "смерть" },
 };
 
 export function tagLabel(language: Language, tag: string) {
