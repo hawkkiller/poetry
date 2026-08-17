@@ -1,4 +1,5 @@
 export type Language = "en" | "ru";
+export type OriginalLanguage = Language | "uk";
 
 export const ui = {
   en: {
@@ -82,9 +83,11 @@ export function tagLabel(language: Language, tag: string) {
   return tagLabels[tag]?.[language] ?? tag;
 }
 
-export function languageName(interfaceLanguage: Language, poemLanguage: Language) {
-  if (interfaceLanguage === "ru") return poemLanguage === "ru" ? "Русский" : "Английский";
-  return poemLanguage === "ru" ? "Russian" : "English";
+export function languageName(interfaceLanguage: Language, poemLanguage: OriginalLanguage) {
+  if (interfaceLanguage === "ru") {
+    return { en: "Английский", ru: "Русский", uk: "Украинский" }[poemLanguage];
+  }
+  return { en: "English", ru: "Russian", uk: "Ukrainian" }[poemLanguage];
 }
 
 export function pieceLabel(language: Language, count: number) {

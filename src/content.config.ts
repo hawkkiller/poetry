@@ -5,7 +5,7 @@ import { z } from "astro/zod";
 const poems = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/poems" }),
   schema: ({ image }) => z.object({
-    originalLanguage: z.enum(["en", "ru"]),
+    originalLanguage: z.enum(["en", "ru", "uk"]),
     translationKey: z.string().min(1),
     title: z.string().min(1),
     author: z.string().min(1),
