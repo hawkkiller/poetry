@@ -12,7 +12,7 @@ interface Props {
 const { language } = Astro.props;
 const copy = ui[language];
 const poems = (await getCollection("poems")).sort(
-  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+  (a, b) => b.data.order - a.data.order || a.data.title.localeCompare(b.data.title),
 );
 const tags = [...new Set(poems.flatMap((poem) => poem.data.tags))].sort((a, b) =>
   tagLabel(language, a).localeCompare(tagLabel(language, b)),
